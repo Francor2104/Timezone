@@ -1,0 +1,51 @@
+body.vintage-theme {
+    background-color: #f5eae1;
+    color: #6c5951;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  
+  .title {
+    font-size: 28px;
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  .text {
+    text-align: center;
+  }
+  
+  .label {
+    text-align: center;
+    font-size: 20px;
+  }
+  
+  .select {
+    font-size: 16px;
+    padding: 5px;
+  }
+  
+  .button {
+    font-size: 18px;
+    padding: 10px 20px;
+    background-color: #6c5951;
+    color: #f5eae1;
+    border: 0;
+  }
+  
+  .result-container {
+    margin-top: 30px;
+    text-align: center;
+  }
+  
+  .greeting {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .time {
+    font-size: 18px;
+  }
+  
+  .error {
+    color: red;
+  }

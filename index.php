@@ -6,79 +6,86 @@
 </head>
 <body class="vintage-theme">
   <h1 class="title">Saludo en diferentes zonas horarias</h1>
-  
 
   <div class="text">
+    <?php
+    class Pais {
+      public $nombre;
+      public $zonaHoraria;
 
-    
+      public function __construct($nombre, $zonaHoraria) {
+        $this->nombre = $nombre;
+        $this->zonaHoraria = $zonaHoraria;
+      }
+    }
+
+    $paises = [
+      new Pais("Argentina", "America/Argentina/Buenos_Aires"),
+      new Pais("Australia", "Australia/Sydney"),
+      new Pais("Brasil", "America/Sao_Paulo"),
+      new Pais("Canadá", "America/Toronto"),
+      new Pais("China", "Asia/Shanghai"),
+      new Pais("Colombia", "America/Bogota"),
+      new Pais("Corea del Sur", "Asia/Seoul"),
+      new Pais("Egipto", "Africa/Cairo"),
+      new Pais("España", "Europe/Madrid"),
+      new Pais("Estados Unidos", "America/New_York"),
+      new Pais("Francia", "Europe/Paris"),
+      new Pais("India", "Asia/Kolkata"),
+      new Pais("Inglaterra", "Europe/London"),
+      new Pais("Italia", "Europe/Rome"),
+      new Pais("Japón", "Asia/Tokyo"),
+      new Pais("Venezuela", "America/Caracas")
+    ];
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      $paisSeleccionado = $_POST["pais"];
+
+      $zonaHoraria = null;
+      foreach ($paises as $pais) {
+        if ($pais->nombre === $paisSeleccionado) {
+          $zonaHoraria = $pais->zonaHoraria;
+          break;
+        }
+      }
+
+      if ($zonaHoraria !== null) {
+        date_default_timezone_set($zonaHoraria);
+        $horaActual = new DateTime('now');
+        $hora = intval($horaActual->format('H'));
+
+        $saludo = "";
+        if ($hora >= 5 && $hora < 12) {
+          $saludo = "¡Buenos días desde $paisSeleccionado!";
+        } elseif ($hora >= 12 && $hora < 18) {
+          $saludo = "¡Buenas tardes desde $paisSeleccionado!";
+        } else {
+          $saludo = "¡Buenas noches desde $paisSeleccionado!";
+        }
+
+        $horaFormateada = $horaActual->format('h:i:s A');
+        echo "<p class='greeting'>$saludo</p>";
+        echo "<p class='time'>La hora local es: $horaFormateada</p>";
+      } else {
+        echo "<p class='error'>No se pudo determinar la zona horaria para $paisSeleccionado.</p>";
+      }
+    }
+    ?>
+
     <form method="post" action="">
-      <label for="country" class="label">Selecciona un país:</label>
-      <select name="country" id="country" class="select">
-        <option value="Argentina">Argentina</option>
-        <option value="Australia">Australia</option>
-        <option value="Brasil">Brasil</option>
-        <option value="Canadá">Canadá</option>
-        <option value="China">China</option>
-        <option value="Colombia">Colombia</option>
-        <option value="Corea del Sur">Corea del Sur</option>
-        <option value="Egipto">Egipto</option>
-        <option value="España">España</option>
-        <option value="Estados Unidos">Estados Unidos</option>
-        <option value="Francia">Francia</option>
-        <option value="India">India</option>
-        <option value="Inglaterra">Inglaterra</option>
-        <option value="Italia">Italia</option>
-        <option value="Japón">Japón</option>
+      <label for="pais" class="label">Selecciona un país:</label>
+      <select name="pais" id="pais" class="select">
+        <?php
+        foreach ($paises as $pais) {
+          echo "<option value='$pais->nombre'>$pais->nombre</option>";
+        }
+        ?>
       </select>
-      
       <button type="submit" class="button">Saludar</button>
     </form>
   </div>
-    
-    <div id="result" class="result-container">
-    <?php
-      if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $country = $_POST["country"];
-        $countryTimezones = [
-          "Argentina" => "America/Argentina/Buenos_Aires",
-          "Australia" => "Australia/Sydney",
-          "Brasil" => "America/Sao_Paulo",
-          "Canadá" => "America/Toronto",
-          "China" => "Asia/Shanghai",
-          "Colombia" => "America/Bogota",
-          "Corea del Sur" => "Asia/Seoul",
-          "Egipto" => "Africa/Cairo",
-          "España" => "Europe/Madrid",
-          "Estados Unidos" => "America/New_York",
-          "Francia" => "Europe/Paris",
-          "India" => "Asia/Kolkata",
-          "Inglaterra" => "Europe/London",
-          "Italia" => "Europe/Rome",
-          "Japón" => "Asia/Tokyo"
-        ];
 
-        if (array_key_exists($country, $countryTimezones)) {
-          date_default_timezone_set($countryTimezones[$country]);
-          $time = new DateTime('now');
-          $hour = intval($time->format('H'));
-
-          $greeting = "";
-          if ($hour >= 5 && $hour < 12) {
-            $greeting = "¡Buenos días desde $country!";
-          } elseif ($hour >= 12 && $hour < 18) {
-            $greeting = "¡Buenas tardes desde $country!";
-          } else {
-            $greeting = "¡Buenas noches desde $country!";
-          }
-
-          $formattedTime = $time->format('h:i:s A');
-          echo "<p class='greeting'>$greeting</p>";
-          echo "<p class='time'>La hora local es: $formattedTime</p>";
-        } else {
-          echo "<p class='error'>No se pudo determinar la zona horaria para $country.</p>";
-        }
-      }
-    ?>
+  <div id="result" class="result-container">
   </div>
 </body>
 </html>
